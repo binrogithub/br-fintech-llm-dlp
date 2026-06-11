@@ -1,0 +1,55 @@
+# BR DLP 策略：实体 -> 动作/阈值。挂载到 litellm 容器 /app/br_dlp_policy.yaml。
+# 改动后 docker compose restart litellm 生效。
+policy_id: BR-AI-001
+fail_closed: true
+
+entities:
+  # 个人/企业标识 —— 脱敏后允许继续调用模型
+  BR_CPF:      { action: MASK,  threshold: 0.85 }
+  BR_CNPJ:     { action: MASK,  threshold: 0.80 }
+  BR_PIX_KEY:  { action: MASK,  threshold: 0.65 }
+  BR_PHONE:    { action: MASK,  threshold: 0.65 }
+  BR_CEP:      { action: MASK,  threshold: 0.65 }
+  EMAIL:       { action: MASK,  threshold: 0.80 }
+
+  # 金融凭据 —— 直接拦截，不调用任何模型
+  BR_BOLETO:   { action: BLOCK, threshold: 0.90 }
+  CREDIT_CARD: { action: BLOCK, threshold: 0.80 }
+  AUTH_SECRET: { action: BLOCK, threshold: 0.70 }
+
+# 敏感信息在当前这条输入里
+block_message_pt: >-
+  Sua mensagem foi bloqueada porque parece conter dados sensíveis
+  ({entities}). Por favor, remova essas informações e tente novamente.
+  Nunca compartilhe senhas, códigos de segurança ou números de cartão.
+
+# 敏感信息残留在对话历史里（当前输入是干净的）——必须清历史/新开对话，
+# 否则后续每一轮都会被持续拦截
+block_message_history_pt: >-
+  Esta conversa foi bloqueada porque uma mensagem anterior contém dados
+  sensíveis ({entities}) que permanecem no histórico. Inicie uma nova
+  conversa (/clear) ou remova aquela mensagem para continuar. Enquanto
+  esses dados estiverem no histórico, todas as próximas mensagens serão
+  bloqueadas.
+
+output_block_message_pt: >-
+  A resposta foi retida pela política de segurança porque continha
+  dados sensíveis ({entities}).
+
+# 显性化脱敏：MASK 静默放行，用户看不到。开启后在模型回答前加隐私横幅。
+show_mask_notice: true
+mask_notice_pt: >-
+  🔒 Aviso de privacidade: para sua proteção, os seguintes dados sensíveis
+  foram ocultados automaticamente da sua mensagem antes do envio ao modelo:
+  {entities}.
+
+# 实体类型 → 葡语友好名（横幅展示用）
+entity_labels_pt:
+  BR_CPF: CPF
+  BR_CNPJ: CNPJ
+  BR_PIX_KEY: chave PIX
+  BR_PHONE: telefone
+  BR_CEP: CEP
+  EMAIL: e-mail
+  PERSON: nome
+  LOCATION: localização

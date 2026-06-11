@@ -1,0 +1,23 @@
+# local Claude Code settings (contains local paths / ad-hoc command history)
+.claude/
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# secrets / env
+*.env
+.env
+*.pem
+*.key
+id_*
+
+# backups / runtime
+*.bak
+*.bak.*
+*.pid
+*.log
+*-debug.jsonl

@@ -1,0 +1,4 @@
+supported_languages:
+  - pt
+  - en
+default_score_threshold: 0

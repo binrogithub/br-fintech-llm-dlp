@@ -1,0 +1,22 @@
+# 精简注册表：NER（PERSON/LOCATION）由 spacy NLP engine 自动提供；
+# 正则+校验位类巴西实体（CPF/CNPJ/PIX/Boleto）由 LiteLLM 侧 br_dlp_guardrail 负责，
+# 此处只保留语言无关的通用 recognizer，避免 en-only recognizer 在 pt 请求下报错。
+supported_languages:
+  - pt
+  - en
+global_regex_flags: 26
+
+recognizers:
+  - name: CreditCardRecognizer
+    supported_languages:
+      - language: en
+        context: [credit, card, visa, mastercard, cc, amex, discover]
+      - language: pt
+        context: [cartão, cartao, crédito, credito, visa, mastercard, débito, debito]
+    type: predefined
+
+  - name: EmailRecognizer
+    type: predefined
+
+  - name: IpRecognizer
+    type: predefined

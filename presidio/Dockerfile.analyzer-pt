@@ -1,0 +1,10 @@
+# 带葡萄牙语 NLP 模型的 Presidio Analyzer（PERSON/LOCATION 等 NER 实体）
+FROM mcr.microsoft.com/presidio-analyzer:latest
+
+RUN python -m spacy download pt_core_news_md
+
+COPY analyzer_conf_pt.yaml nlp_conf_pt.yaml recognizers_pt.yaml /app/conf-pt/
+
+ENV ANALYZER_CONF_FILE=/app/conf-pt/analyzer_conf_pt.yaml \
+    NLP_CONF_FILE=/app/conf-pt/nlp_conf_pt.yaml \
+    RECOGNIZER_REGISTRY_CONF_FILE=/app/conf-pt/recognizers_pt.yaml
