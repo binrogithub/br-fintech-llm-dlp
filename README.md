@@ -1,5 +1,8 @@
 # br-fintech-llm-dlp
 
+[![CI](https://github.com/binrogithub/br-fintech-llm-dlp/actions/workflows/ci.yml/badge.svg)](https://github.com/binrogithub/br-fintech-llm-dlp/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
 **Gateway-side DLP for LLM prompts — purpose-built for Brazilian fintech.**
 
 When a user accidentally pastes a **CPF, credit card, PIX key, Boleto, or
